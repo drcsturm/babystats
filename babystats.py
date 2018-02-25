@@ -106,14 +106,14 @@ def feeding(spoken_text):
             else:
                 breastSide = b
     minutes = ""
-    num = re.search('\d*\.\d+|\d+ minute', sleep)
+    num = re.search('\d*\.\d+|\d+ minute', breast_or_volume)
     if num:
         minutes = num.group().replace("minute", "").strip()
     ounces = ""
-    num = re.search('\d*\.\d+|\d+ ounce', weight)
+    num = re.search('\d*\.\d+|\d+ ounce', breast_or_volume)
     if num:
         ounces = num.group().replace("ounce", "").strip()
-    num = re.search('\d*\.\d+|\d+ oz', weight)
+    num = re.search('\d*\.\d+|\d+ oz', breast_or_volume)
     if num:
         ounces = num.group().replace("oz", "").strip()
     return {

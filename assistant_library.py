@@ -118,7 +118,7 @@ def process_event(assistant, event):
         elif text == 'volume down':
             assistant.stop_conversation()
             volume_down()
-        elif text in babystats.babystat_commands:
+        elif any(s in text for s in babystats.babystat_commands):
             assistant.stop_conversation()
             record_baby_stat(text)
 

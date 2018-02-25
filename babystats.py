@@ -148,6 +148,9 @@ def add_weight(spoken_text):
     num = re.search('\d*\.\d+|\d+ pound', weight)
     if num:
         pounds = num.group().replace("pound", "").strip()
+    num = re.search('\d*\.\d+|\d+ lb', weight)
+    if num:
+        pounds = num.group().replace("lb", "").strip()
     num = re.search('\d*\.\d+|\d+ ounce', weight)
     if num:
         ounces = num.group().replace("ounce", "").strip()

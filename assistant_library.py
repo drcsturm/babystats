@@ -27,6 +27,7 @@ It is available for Raspberry Pi 2/3 only; Pi Zero is not supported.
 import logging
 import subprocess
 import sys
+sys.path.append('../')
 
 import aiy.assistant.auth_helpers
 import aiy.audio

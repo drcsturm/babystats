@@ -72,7 +72,7 @@ def single_event(spoken_text):
     return {
         "id": myID,
         "accessToken": myaccessToken,
-        "event": spoken_text.title().replace(' ',''),
+        "event": spoken_text.title().replace(' ','').strip(),
         "babyName" : "",
         "eventTime" : ""
     }
@@ -80,12 +80,15 @@ def single_event(spoken_text):
 
 def add_pumping(spoken_text):
     volume = spoken_text.replace("add pumping", "").strip()
-    #!!!!! NEED TO CONVERT VOLUME TO FLOAT
+    ounces = ""
+    num = re.search('\d*\.\d+|\d+', volume)
+    if num:
+        ounces = num.group().strip()
     return {
         "id": myID,
         "accessToken": myaccessToken,
         "event": "AddPumping",
-        "bottleOunces": volume,
+        "bottleOunces": ounces,
         "babyName" : "",
         "eventTime" : ""
     }
@@ -94,15 +97,22 @@ def add_pumping(spoken_text):
 def feeding(spoken_text):
     breast_or_volume = spoken_text.replace("add feeding", "").replace("start feeding", "").replace("end feeding", "").strip()
     breastSide = ""
-    for b in ['left', 'right', 'both']:
+    for b in ['left', 'right', 'both', 'write']:
         if b in breast_or_volume:
-            breastSide = b
             breast_or_volume = breast_or_volume.replace(b, "").strip()
+            if b == 'write':
+                breastSide = 'right'
+            else:
+                breastSide = b
+    ounces = ""
+    num = re.search('\d*\.\d+|\d+', breast_or_volume)
+    if num:
+        ounces = num.group().strip()
     return {
         "id": myID,
         "accessToken": myaccessToken,
         "event": "AddFeeding",
-        "bottleOunces": "",
+        "bottleOunces": ounces,
         "feedingMinutes": "",
         "breastSide": breastSide,
         "babyName" : "",
@@ -111,26 +121,45 @@ def feeding(spoken_text):
 
 
 def add_sleep(spoken_text):
-    note = spoken_text.replace("add note", "").strip()
+    sleep = spoken_text.replace("add sleep", "").strip()
+    hours = ""
+    minutes = ""
+    num = re.search('\d*\.\d+|\d+ hour', sleep)
+    if num:
+        hours = num.group().replace("hour", "").strip()
+    num = re.search('\d*\.\d+|\d+ minute', sleep)
+    if num:
+        minutes = num.group().replace("minute", "").strip()
     return {
         "id": myID,
         "accessToken": myaccessToken,
         "event": "AddSleep",
-        "hours" : "1",
-        "minutes" : "20",
+        "hours" : hours,
+        "minutes" : minutes,
         "babyName" : "",
         "eventTime" : ""
     }
 
 
 def add_weight(spoken_text):
-    note = spoken_text.replace("add note", "").strip()
+    weight = spoken_text.replace("add weight", "").strip()
+    pounds = ""
+    ounces = ""
+    num = re.search('\d*\.\d+|\d+ pound', weight)
+    if num:
+        pounds = num.group().replace("pound", "").strip()
+    num = re.search('\d*\.\d+|\d+ ounce', weight)
+    if num:
+        ounces = num.group().replace("ounce", "").strip()
+    num = re.search('\d*\.\d+|\d+ oz', weight)
+    if num:
+        ounces = num.group().replace("oz", "").strip()
     return {
         "id": myID,
         "accessToken": myaccessToken,
         "event": "AddWeight",
-        "pounds" : "8",
-        "ounces" : "6",
+        "pounds" : pounds,
+        "ounces" : ounces,
         "babyName" : "",
         "eventTime" : ""
     }

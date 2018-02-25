@@ -86,8 +86,7 @@ def volume_down():
 
 def record_baby_stat(text):
     response = babystats.send_data_to_babystats(text)
-    aiy.audio.say(response["statusMessage"])
-
+    aiy.audio.say(response)
 
 
 def process_event(assistant, event):

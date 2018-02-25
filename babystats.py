@@ -202,13 +202,13 @@ def send_data_to_babystats(spoken_text):
     elif "add note" in spoken_text:
         newConditions = add_note(spoken_text)
     else:
-        return {'statusMessage': "Sorry, I was not able to process your request."}
+        return "Sorry, I was not able to process your request."
     params = json.dumps(newConditions).encode('utf8')
     req = urllib.request.Request(conditionsSetURL, data=params, headers={'content-type': 'application/json'})
     response = urllib.request.urlopen(req)
     response_text = response.read().decode('utf8')
     print(response_text)
-    return json.loads(response_text)
+    return json.loads(response_text)["statusMessage"].replace("<speak>", "").replace("</speak>", "")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import json
+import re
 import urllib.request
 
 myID = "1038505942"
@@ -104,16 +105,23 @@ def feeding(spoken_text):
                 breastSide = 'right'
             else:
                 breastSide = b
-    ounces = ""
-    num = re.search('\d*\.\d+|\d+', breast_or_volume)
+    minutes = ""
+    num = re.search('\d*\.\d+|\d+ minute', sleep)
     if num:
-        ounces = num.group().strip()
+        minutes = num.group().replace("minute", "").strip()
+    ounces = ""
+    num = re.search('\d*\.\d+|\d+ ounce', weight)
+    if num:
+        ounces = num.group().replace("ounce", "").strip()
+    num = re.search('\d*\.\d+|\d+ oz', weight)
+    if num:
+        ounces = num.group().replace("oz", "").strip()
     return {
         "id": myID,
         "accessToken": myaccessToken,
         "event": "AddFeeding",
         "bottleOunces": ounces,
-        "feedingMinutes": "",
+        "feedingMinutes": minutes,
         "breastSide": breastSide,
         "babyName" : "",
         "eventTime" : ""

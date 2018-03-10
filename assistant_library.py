@@ -42,6 +42,15 @@ logging.basicConfig(
     format="[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
 )
 
+pandora_commands = {
+    'pause music': 'p',
+    'play music': 'p',
+    'next song': 'n',
+    'love song': '+',
+    'ban song': '-',
+    'stop music': 'q',
+    'quit music': 'q',
+}
 
 def power_off_pi():
     aiy.audio.say('Good bye!')
@@ -89,6 +98,15 @@ def record_baby_stat(text):
     aiy.audio.say(response)
 
 
+def start_pandora():
+    proc = subprocess.Popen(['pianobar'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, universal_newlines=True, shell=True)
+    aiy.audio.say('Pandora started')
+
+
+def command_pandora(text):
+    subprocess.Popen(["echo -n '{}' > ~/.config/pianobar/ctl".format(pandora_commands[text])], shell=True)
+
+
 def process_event(assistant, event):
     status_ui = aiy.voicehat.get_status_ui()
     if event.type == EventType.ON_START_FINISHED:
@@ -117,6 +135,12 @@ def process_event(assistant, event):
         elif text == 'volume down':
             assistant.stop_conversation()
             volume_down()
+        elif text == 'start music':
+            assistant.stop_conversation()
+            start_pandora()
+        elif text in pandora_commands.keys():
+            assistant.stop_conversation()
+            command_pandora(text)
         elif any(s in text for s in babystats.babystat_commands):
             assistant.stop_conversation()
             record_baby_stat(text)

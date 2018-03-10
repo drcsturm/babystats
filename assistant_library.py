@@ -42,6 +42,7 @@ logging.basicConfig(
     format="[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
 )
 
+pianobar_proc = None
 pandora_commands = {
     'pause music': 'p',
     'play music': 'p',
@@ -99,12 +100,17 @@ def record_baby_stat(text):
 
 
 def start_pandora():
-    proc = subprocess.Popen(['pianobar'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, universal_newlines=True, shell=True)
+    pianobar_proc = subprocess.Popen(['pianobar'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, universal_newlines=True, shell=True)
     aiy.audio.say('Pandora started')
 
 
 def command_pandora(text):
-    subprocess.Popen(["echo -n '{}' > ~/.config/pianobar/ctl".format(pandora_commands[text])], shell=True)
+    if pianobar_proc:
+        subprocess.Popen(["echo -n '{}' > ~/.config/pianobar/ctl".format(pandora_commands[text])], shell=True)
+    else:
+        aiy.audio.say('First say start music.')
+    if pandora_commands[text] == 'q':
+        pianobar_proc = None
 
 
 def process_event(assistant, event):
